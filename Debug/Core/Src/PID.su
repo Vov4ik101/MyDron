@@ -1,0 +1,2 @@
+../Core/Src/PID.c:4:6:PID_Init	24	static
+../Core/Src/PID.c:13:7:PID_Compute	48	static

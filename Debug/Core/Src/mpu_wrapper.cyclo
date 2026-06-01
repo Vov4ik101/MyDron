@@ -1,0 +1,38 @@
+cmath:106:3:constexpr float std::asin(float)	1
+cmath:144:3:constexpr float std::atan2(float, float)	1
+cmath:463:3:constexpr float std::sqrt(float)	1
+helper_3dmath.h:44:9:Quaternion::Quaternion()	1
+helper_3dmath.h:51:9:Quaternion::Quaternion(float, float, float, float)	1
+helper_3dmath.h:58:20:Quaternion Quaternion::getProduct(Quaternion)	1
+helper_3dmath.h:71:20:Quaternion Quaternion::getConjugate()	1
+helper_3dmath.h:129:14:void VectorInt16::rotate(Quaternion*)	1
+helper_3dmath.h:167:9:VectorFloat::VectorFloat()	1
+MPU6050_6Axis_MotionApps_V6_12.h:351:9:uint8_t MPU6050::dmpInitialize()	2
+MPU6050_6Axis_MotionApps_V6_12.h:384:6:bool MPU6050::dmpPacketAvailable()	1
+MPU6050_6Axis_MotionApps_V6_12.h:411:9:uint8_t MPU6050::dmpGetAccel(int32_t*, const uint8_t*)	2
+MPU6050_6Axis_MotionApps_V6_12.h:419:9:uint8_t MPU6050::dmpGetAccel(int16_t*, const uint8_t*)	2
+MPU6050_6Axis_MotionApps_V6_12.h:427:9:uint8_t MPU6050::dmpGetAccel(VectorInt16*, const uint8_t*)	2
+MPU6050_6Axis_MotionApps_V6_12.h:435:9:uint8_t MPU6050::dmpGetQuaternion(int32_t*, const uint8_t*)	2
+MPU6050_6Axis_MotionApps_V6_12.h:444:9:uint8_t MPU6050::dmpGetQuaternion(int16_t*, const uint8_t*)	2
+MPU6050_6Axis_MotionApps_V6_12.h:453:9:uint8_t MPU6050::dmpGetQuaternion(Quaternion*, const uint8_t*)	2
+MPU6050_6Axis_MotionApps_V6_12.h:468:9:uint8_t MPU6050::dmpGetGyro(int32_t*, const uint8_t*)	2
+MPU6050_6Axis_MotionApps_V6_12.h:476:9:uint8_t MPU6050::dmpGetGyro(int16_t*, const uint8_t*)	2
+MPU6050_6Axis_MotionApps_V6_12.h:484:9:uint8_t MPU6050::dmpGetGyro(VectorInt16*, const uint8_t*)	2
+MPU6050_6Axis_MotionApps_V6_12.h:494:9:uint8_t MPU6050::dmpGetLinearAccel(VectorInt16*, VectorInt16*, VectorFloat*)	1
+MPU6050_6Axis_MotionApps_V6_12.h:502:9:uint8_t MPU6050::dmpGetLinearAccelInWorld(VectorInt16*, VectorInt16*, Quaternion*)	1
+MPU6050_6Axis_MotionApps_V6_12.h:514:9:uint8_t MPU6050::dmpGetGravity(int16_t*, const uint8_t*)	4
+MPU6050_6Axis_MotionApps_V6_12.h:525:9:uint8_t MPU6050::dmpGetGravity(VectorFloat*, Quaternion*)	1
+MPU6050_6Axis_MotionApps_V6_12.h:536:9:uint8_t MPU6050::dmpGetEuler(float*, Quaternion*)	1
+MPU6050_6Axis_MotionApps_V6_12.h:554:9:uint8_t MPU6050::dmpGetYawPitchRoll(float*, Quaternion*, VectorFloat*)	3
+MPU6050_6Axis_MotionApps_V6_12.h:575:9:uint8_t MPU6050::dmpProcessFIFOPacket(const unsigned char*)	1
+MPU6050_6Axis_MotionApps_V6_12.h:585:9:uint8_t MPU6050::dmpReadAndProcessFIFOPacket(uint8_t, uint8_t*)	4
+MPU6050_6Axis_MotionApps_V6_12.h:610:10:uint16_t MPU6050::dmpGetFIFOPacketSize()	1
+MPU6050_6Axis_MotionApps_V6_12.h:616:9:uint8_t MPU6050::dmpGetCurrentFIFOPacket(uint8_t*)	1
+mpu_wrapper.cpp:16:6:void MPU_Init()	3
+mpu_wrapper.cpp:29:6:bool MPU_TestConnection()	1
+mpu_wrapper.cpp:33:6:bool MPU_Update()	3
+mpu_wrapper.cpp:45:7:float MPU_GetRoll()	1
+mpu_wrapper.cpp:49:7:float MPU_GetPitch()	1
+mpu_wrapper.cpp:53:7:float MPU_GetYaw()	1
+mpu_wrapper.cpp:57:1:void __static_initialization_and_destruction_0(int, int)	3
+mpu_wrapper.cpp:57:1:cpp)	1
