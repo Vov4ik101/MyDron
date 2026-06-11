@@ -184,6 +184,7 @@ uint8_t send_data_NRF24(uint8_t data[DATA_SIZE]){
 				ОТПРАВКА нескольких байт ДАННЫХ NRF24L01 И ПЕРЕКЛЮЧЕНИЕ НА ПРИЕМ
 ************************************************************************************/
 uint8_t send_dataFlow_NRF24(uint8_t data[DATA_SIZE], uint8_t Len){
+	uint8_t taill = 32-Len;
 	uint8_t status=ERR;
 	send_cmd_NRF24(FLUSH_TX);														// Очистка буфера передатчика
 	set_bit_reg_NRF24(STATUS, TX_DS);												// Сброс флага успешной отправки пакета
@@ -198,6 +199,12 @@ uint8_t send_dataFlow_NRF24(uint8_t data[DATA_SIZE], uint8_t Len){
 				SPI_Transfer(data[i]);														// Передача байт данных из массива данных data в буфер FIFO NRF24L01
 				i++;
 			}
+
+			while(taill--){
+				SPI_Transfer(0);														// Передача байт данных из массива данных data в буфер FIFO NRF24L01
+				i++;
+			}
+
 			LL_GPIO_SetOutputPin(CSN_GPIO_Port,CSN_Pin );
 
 

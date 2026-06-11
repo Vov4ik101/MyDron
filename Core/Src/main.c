@@ -43,10 +43,10 @@
 I2C_HandleTypeDef hi2c1;
 UART_HandleTypeDef huart2;
 
-volatile uint8_t EXTI_5 = 0;
+
 
 /* USER CODE BEGIN PV */
-
+volatile uint8_t EXTI_5 = 0;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/

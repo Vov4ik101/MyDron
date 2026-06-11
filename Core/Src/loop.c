@@ -5,6 +5,9 @@ extern volatile uint8_t EXTI_5;
 static uint8_t packet_counter = 1;
 static TelemetryPacket tx_packet;
 
+static uint32_t last_time = 0;
+const uint32_t INTERVAL_MS = 1000;  // 1 секунда
+
 void print_reg(void){
 	UART_SendString ("STATUS: ");
 	UART_SendHex(read_reg_NRF24(STATUS));
@@ -70,6 +73,7 @@ void loop(void) {
 
     // Основной цикл
     while(1) {
+    	uint32_t now = HAL_GetTick();
 
         if (MPU_Update()) {
             flight.roll = MPU_GetRoll();
@@ -117,23 +121,28 @@ void loop(void) {
             tx_packet.roll = roll_out;
             tx_packet.pitch = pitch_out;
             tx_packet.yaw = yaw_out;
-            tx_packet.throttle = 3.3;
+            tx_packet.throttle = flight.throttle;
         }
 
         if(EXTI_5 == 1){					//Если пришло сообщение от NRF
+        	EXTI_5 = 0;						//Обнуляем флаг
         	read_FIFO(data);
         	if(data[0] == 1){
         		flight.throttle+=0.01;
         	}else if(data[0] == 2){
         		flight.throttle-=0.01;
         	}
-
-        	 tx_packet.size = sizeof(TelemetryPacket);
-        	 if (send_dataFlow_NRF24((uint8_t*)&tx_packet, sizeof(TelemetryPacket))) {
-        	        // Отправлено успешно
-        	    }
         }
 
+
+        if (now - last_time >= INTERVAL_MS) {
+
+        	 last_time = now;
+        	 tx_packet.size = sizeof(TelemetryPacket);
+        	 //send_data_NRF24( (uint8_t*)&tx_packet);
+        	 send_dataFlow_NRF24((uint8_t*)&tx_packet, sizeof(TelemetryPacket));
+
+        }
 /*
 //        UART_SendString("********* RECEIVER **********");
         UART_SendNewLine();
@@ -149,6 +158,6 @@ void loop(void) {
     	print_array(data, 3);
     	//UART_SendHex(Ss);
 */
-    	HAL_Delay(100);  // ~100 Гц
+    	//HAL_Delay(100);  // ~100 Гц
     }
 }
