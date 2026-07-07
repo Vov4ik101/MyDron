@@ -95,13 +95,13 @@ void set_bit_reg_NRF24(uint8_t address, uint8_t bit){
 uint8_t write_FIFO(uint8_t data[DATA_SIZE]){
 	uint8_t i=0;																	// Переменная элементов массива
 	uint8_t count = DATA_SIZE;														// Счетчик величины массива
-	LL_GPIO_ResetOutputPin(CSN_GPIO_Port,CSN_Pin );
+	LL_GPIO_ResetOutputPin(CSN_GPIO_Port,CSN_Pin ); 								// ChipSelect ставим в ноль
 	SPI_Transfer(W_TX_PAYLOAD);														// Команда записи байт данных в буфер
 	while(count--){
 		SPI_Transfer(data[i]);														// Передача байт данных из массива данных data в буфер FIFO NRF24L01
 		i++;
 	}
-	LL_GPIO_SetOutputPin(CSN_GPIO_Port,CSN_Pin );
+	LL_GPIO_SetOutputPin(CSN_GPIO_Port,CSN_Pin ); 									// Возвращаем ChipSelect в еденицу
 	return i; 																		//Возвращаем кол-во переданных байт
 }
 
@@ -184,40 +184,59 @@ uint8_t send_data_NRF24(uint8_t data[DATA_SIZE]){
 				ОТПРАВКА нескольких байт ДАННЫХ NRF24L01 И ПЕРЕКЛЮЧЕНИЕ НА ПРИЕМ
 ************************************************************************************/
 uint8_t send_dataFlow_NRF24(uint8_t data[DATA_SIZE], uint8_t Len){
-	uint8_t taill = 32-Len;
-	uint8_t status=ERR;
-	send_cmd_NRF24(FLUSH_TX);														// Очистка буфера передатчика
-	set_bit_reg_NRF24(STATUS, TX_DS);												// Сброс флага успешной отправки пакета
-	set_bit_reg_NRF24(STATUS, MAX_RT);												// Сброс флага максимального числа попыток отправки пакета
+	uint8_t taill = 32-Len; // Оставшееся кол-во байт,за вычетом размера телеметрии, чтобы добить пакет до 32 байт
+	uint8_t status=ERR; //Предварительно устанавливаем статус возврата ERR
+	uint32_t timeout; // Переменная для ограничения таймаута ожидания подтверждения
+	uint8_t reg_status; // Переменная для считывания регистра статуса
+    set_bit_reg_NRF24(STATUS, TX_DS); // Сброс флага успешной передачи в регистре статус
+    set_bit_reg_NRF24(STATUS, MAX_RT); // Сброс флага максимального кол-ва попыток передачи
 
 //Запись данных в массив
-			uint8_t i=0;																	// Переменная элементов массива
+			uint8_t i=0;																// Переменная элементов массива
 			uint8_t count = Len;														// Счетчик величины массива
 			LL_GPIO_ResetOutputPin(CSN_GPIO_Port,CSN_Pin );
-			SPI_Transfer(W_TX_PAYLOAD);														// Команда записи байт данных в буфер
+			SPI_Transfer(W_TX_PAYLOAD);													// Команда записи байт данных в буфер
 			while(count--){
-				SPI_Transfer(data[i]);														// Передача байт данных из массива данных data в буфер FIFO NRF24L01
+				SPI_Transfer(data[i]);													// Передача байт данных из массива данных data в буфер FIFO NRF24L01
 				i++;
 			}
-
 			while(taill--){
 				SPI_Transfer(0);														// Передача байт данных из массива данных data в буфер FIFO NRF24L01
 				i++;
 			}
 
 			LL_GPIO_SetOutputPin(CSN_GPIO_Port,CSN_Pin );
+//Завершили запись данных в массив
 
+			tx_mode_NRF24(); // Переходим в режим отправки
 
-	tx_mode_NRF24();																// Запуск отправки байт данных из буфера
-	while ( (read_reg_NRF24(STATUS) & (1<<TX_DS|1<<MAX_RT)) == 0 ) {}				// Ожидание установки бита успешной передачи TX_DS или максимального числа попыток передачи MAX_RT
+		    timeout = HAL_GetTick();
+		    while (1) {
+		        reg_status = read_reg_NRF24(STATUS); //Читаем регистр статуса
 
-	if ((read_reg_NRF24(STATUS) & (1<<TX_DS)) != 0)									// Проверка флага успешной отправки пакета
-		status = OK;																// Если TX_DS = 1, то было принято подтверждение успешной отправки пакета
-	else
-		status = ERR;																// Если TX_DS = 0, то не было принято подтверждение успешной отправки пакета
+		        if (reg_status & (1 << TX_DS)) {
+		            status = OK; // Если бит успешной передачи сообщения установлен в 1, то статус OK
+		            break; //Выходим из цикла while
+		        }
 
-	rx_mode_NRF24();																// Переключение на прием
-	return status;
+		        if (reg_status & (1 << MAX_RT)) {
+		            status = ERR; // Если бит максимального кол-ва попыток передачи установлен в 1, то статус ERR
+		            break; //Выходим из цикла while
+		        }
+
+		        if (HAL_GetTick() - timeout > 50) {  // 100 мс таймаут
+		            status = ERR; // Если больше 50мс не устанавливается ниодин флаг, то статус ERR
+		            break; //выход из цикла while
+		        }
+		    }
+		    if (status == OK) {
+		        set_bit_reg_NRF24(STATUS, TX_DS); // сбрасываем флаг успешной передачи TX_DS
+		    } else {
+			    set_bit_reg_NRF24(STATUS, TX_DS); // Сброс флага успешной передачи в регистре статус
+			    set_bit_reg_NRF24(STATUS, MAX_RT); // Сброс флага максимального кол-ва попыток передачи
+		    }
+		    rx_mode_NRF24(); // Возврат в режим приёма
+		    return status;
 }
 
 /************************************************************************************

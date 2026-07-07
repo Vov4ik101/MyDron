@@ -5,13 +5,13 @@
 #include "main.h"
 
 typedef struct {
-    float kp, ki, kd;
-    float integral;
-    float prev_error;
-    float output_limit;
+float kp, ki, kd;
+float integral;
+float prev_error;
+float output_limit;
 } PID;
 
 void PID_Init(PID* pid, float kp, float ki, float kd);
-float PID_Compute(PID* pid, float target, float current);
+float PID_Compute(PID* pid, float target, float current, float throttle);
 
 #endif

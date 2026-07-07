@@ -1,8 +1,8 @@
-../Core/Src/uart_hal.c:4:6:UART_SendByte	16	static
-../Core/Src/uart_hal.c:8:6:UART_SendString	16	static
-../Core/Src/uart_hal.c:12:6:UART_SendInt	32	static
-../Core/Src/uart_hal.c:18:6:UART_SendFloat	48	static
-../Core/Src/uart_hal.c:24:6:UART_SendHex	24	static
-../Core/Src/uart_hal.c:30:6:UART_SendNewLine	8	static
-../Core/Src/uart_hal.c:34:6:print_array	24	static
-../Core/Src/uart_hal.c:41:9:UART_Receive_Byte_Blocking	24	static
+..\Core\Src\uart_hal.c:4:6:UART_SendByte	16	static
+..\Core\Src\uart_hal.c:8:6:UART_SendString	16	static
+..\Core\Src\uart_hal.c:12:6:UART_SendInt	32	static
+..\Core\Src\uart_hal.c:18:6:UART_SendFloat	48	static
+..\Core\Src\uart_hal.c:24:6:UART_SendHex	24	static
+..\Core\Src\uart_hal.c:30:6:UART_SendNewLine	8	static
+..\Core\Src\uart_hal.c:34:6:print_array	24	static
+..\Core\Src\uart_hal.c:41:9:UART_Receive_Byte_Blocking	24	static
